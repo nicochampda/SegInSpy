@@ -11,6 +11,7 @@ from sklearn.svm import LinearSVC
 def main():
     """docstring for main"""
 
+    decalage = 130
     train_size = 100
     test_size  = 30
 
@@ -23,7 +24,7 @@ def main():
     train_X = []
     train_y = []
     # Ouverture des images d'entrainement
-    for i in range(train_size):
+    for i in range(decalage, train_size + decalage):
         #print("Entrainement:", i)
         for j in range(len(list_dir)): # Pour chaque classe
 
@@ -47,7 +48,7 @@ def main():
     test_X_stair = []
     test_y_stair = np.ones(test_size) * 2
     # Ouverture des images de test
-    for i in range(train_size, train_size + test_size):
+    for i in range(train_size + decalage, train_size + test_size + decalage):
         #print("Test:", i)
         for j in range(len(list_dir)): # Pour chaque classe
 
@@ -89,6 +90,7 @@ def main():
     # Scaling
     scaler = StandardScaler()
     scaler.fit(train_X)
+    pickle.dump(scaler, open("scaler_svm.sav", 'wb'))
     train_X = scaler.transform(train_X)
     test_X_porte = scaler.transform(test_X_porte)
     test_X_signe = scaler.transform(test_X_signe)
@@ -99,8 +101,7 @@ def main():
     clf = LinearSVC()
     clf.fit(train_X, train_y)
     print("Training termine")
-    filename = "model_svm.sav"
-    pickle.dump(clf, open(filename, 'wb'))
+    pickle.dump(clf, open("model_svm_2.sav", 'wb'))
     print("Enregistrement termine")
 
     # Resultat sur les images de test

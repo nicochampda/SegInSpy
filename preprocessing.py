@@ -3,7 +3,9 @@ import numpy as np
 
 def preprocessing(img):
     #resize
-    small_img = cv2.resize(img, (0,0), fx=0.2, fy=0.2)
+    #small_img = cv2.resize(img, (0,0), fx=0.2, fy=0.2)
+    small_img = cv2.resize(img, (500,500))
+
     
     #egalisation d'histogrammes
     clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
@@ -17,7 +19,7 @@ def preprocessing(img):
     ret, thr5 = cv2.threshold(thr4, 80, 255, cv2.THRESH_BINARY_INV)
 
     #ouverture (erosion --> dilatation)
-    kernel = np.ones((50,50), np.uint8) #carré
+    kernel = np.ones((30,30), np.uint8) #carré
     opn = cv2.morphologyEx(thr5, cv2.MORPH_OPEN, kernel)
     
     return opn

@@ -5,9 +5,10 @@ import matplotlib.pyplot as plt
 rep = '/homes/nchampda/Bureau/Sanssauvegarde/'
 #img = cv2.imread(rep + 'normal/Doors/DOR_S1_1.jpg', 0)
 path = "/homes/mvu/Bureau/Sanssauvegarde/"
-img = cv2.imread(path + "Doors/DOR_S1_18" + ".jpg", cv2.IMREAD_COLOR)
-img = cv2.imread(path + "Stairs/STR_S2_86" + ".jpg", cv2.IMREAD_COLOR)
-img = cv2.imread(path + "Sign/SGN_S1_223" + ".jpg", cv2.IMREAD_COLOR)
+#img = cv2.imread(path + "Stairs/STR_S2_86" + ".jpg", cv2.IMREAD_COLOR)
+#img = cv2.imread(path + "Sign/SGN_S1_223" + ".jpg", cv2.IMREAD_COLOR)
+#img = cv2.imread(path + "Doors/DOR_S1_18" + ".jpg", cv2.IMREAD_COLOR)
+img = cv2.imread(path + "Doors/DOR_S4_230" + ".JPG", cv2.IMREAD_COLOR)
 
 # Conversion en niveaux de gris
 gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -18,25 +19,39 @@ clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
 equ = clahe.apply(gray_img)
 
 #ouverture (erosion --> dilatation)
-kernel = np.ones((2,2), np.uint8) #carré
+kernel = np.ones((0,0), np.uint8) #carré
 opn = cv2.morphologyEx(equ, cv2.MORPH_OPEN, kernel)
 
 #flou gaussien
 blr = cv2.blur(opn, (10, 10))
 
-plt.hist(blr.flatten(), bins=255)
-plt.show()
+#plt.hist(blr.flatten(), bins=255)
+#plt.hist(img[:,:,0].flatten(), bins=255, color='blue')
+#plt.hist(img[:,:,1].flatten(), bins=255, color='green')
+#plt.hist(img[:,:,2].flatten(), bins=255, color='red')
+#plt.show()
 
 #seuillage
 ret, thr1 = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
 ret, thr2 = cv2.threshold(equ, 127, 255, cv2.THRESH_BINARY)
 ret, thr3 = cv2.threshold(opn, 127, 255, cv2.THRESH_BINARY)
 
-ret, thr4 = cv2.threshold(blr, 18, 255, cv2.THRESH_TOZERO)
-ret, thr5 = cv2.threshold(thr4, 80, 255, cv2.THRESH_BINARY_INV)
+ret, thr4 = cv2.threshold(blr, 20, 255, cv2.THRESH_TOZERO)
+ret, thr5 = cv2.threshold(thr4, 90, 255, cv2.THRESH_BINARY_INV)
+
+kernel = np.ones((50,50), np.uint8) #carré
+thr5 = cv2.morphologyEx(thr5, cv2.MORPH_OPEN, kernel)
+
+plt.subplot(131)
+plt.imshow(img[:,:,0], cmap='Blues')
+plt.subplot(132)
+plt.imshow(img[:,:,1], cmap = 'Greens')
+plt.subplot(133)
+plt.imshow(img[:,:,2], cmap = 'Reds')
+plt.show()
 
 plt.subplot(121)
-plt.imshow(img)
+plt.imshow(gray_img, cmap='gray')
 plt.subplot(122)
 plt.imshow(thr5, cmap = 'gray')
 plt.show()
