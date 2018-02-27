@@ -15,8 +15,8 @@ def preprocessing(img):
     blr = cv2.blur(equ, (10, 10))
     
     #seuillage
-    ret, thr4 = cv2.threshold(blr, 18, 255, cv2.THRESH_TOZERO)
-    ret, thr5 = cv2.threshold(thr4, 80, 255, cv2.THRESH_BINARY_INV)
+    ret, thr4 = cv2.threshold(blr, 40, 255, cv2.THRESH_TOZERO)
+    ret, thr5 = cv2.threshold(thr4, 100, 255, cv2.THRESH_BINARY_INV)
 
     #ouverture (erosion --> dilatation)
     kernel = np.ones((30,30), np.uint8) #carré

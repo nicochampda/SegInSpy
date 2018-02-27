@@ -3,6 +3,7 @@ import gc
 import cv2
 import pickle
 import numpy as np
+from random import sample
 from preprocessing import preprocessing
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVC
@@ -10,6 +11,10 @@ from sklearn.svm import LinearSVC
 
 def main():
     """docstring for main"""
+
+    print("Apprentissage 2")
+    print("Seuils: 40 - 100")
+    print("Ouverture: 30 x 30")
 
     decalage = 130
     train_size = 100
@@ -21,15 +26,30 @@ def main():
             "/homes/mvu/Bureau/Sanssauvegarde/Stairs/"]
     list_dir = [os.listdir(PATHS[0]), os.listdir(PATHS[1]), os.listdir(PATHS[2])]
 
+    # Tirage au sort des images
+    train_rand_index = [None, None, None]
+    test_rand_index  = [None, None, None]
+    rand_index = np.random.permutation(np.arange(755)) # Porte
+    train_rand_index[0] = rand_index[:train_size]
+    test_rand_index[0]  = rand_index[train_size:train_size + test_size]
+    rand_index = np.random.permutation(np.arange(703)) # Signe
+    train_rand_index[1] = rand_index[:train_size]
+    test_rand_index[1]  = rand_index[train_size:train_size + test_size]
+    rand_index = np.random.permutation(np.arange(600)) # Stairs
+    train_rand_index[2] = rand_index[:train_size]
+    test_rand_index[2]  = rand_index[train_size:train_size + test_size]
+
     train_X = []
     train_y = []
     # Ouverture des images d'entrainement
-    for i in range(decalage, train_size + decalage):
+    for i in range(train_size):
         #print("Entrainement:", i)
         for j in range(len(list_dir)): # Pour chaque classe
 
+            index_image = train_rand_index[j][i]
+
             # Ouverture de l'image courante
-            img = cv2.imread(PATHS[j] + list_dir[j][i], cv2.IMREAD_GRAYSCALE)
+            img = cv2.imread(PATHS[j] + list_dir[j][index_image], cv2.IMREAD_GRAYSCALE)
 
             # Preprocessing de l'image
             pp_img = preprocessing(img)
@@ -48,12 +68,14 @@ def main():
     test_X_stair = []
     test_y_stair = np.ones(test_size) * 2
     # Ouverture des images de test
-    for i in range(train_size + decalage, train_size + test_size + decalage):
+    for i in range(test_size):
         #print("Test:", i)
         for j in range(len(list_dir)): # Pour chaque classe
 
+            index_image = test_rand_index[j][i]
+
             # Ouverture de l'image courante
-            img = cv2.imread(PATHS[j] + list_dir[j][i], cv2.IMREAD_GRAYSCALE)
+            img = cv2.imread(PATHS[j] + list_dir[j][index_image], cv2.IMREAD_GRAYSCALE)
 
             # Preprocessing de l'image
             pp_img = preprocessing(img)
@@ -90,7 +112,7 @@ def main():
     # Scaling
     scaler = StandardScaler()
     scaler.fit(train_X)
-    pickle.dump(scaler, open("scaler_svm.sav", 'wb'))
+    pickle.dump(scaler, open("scaler_svm_3.sav", 'wb'))
     train_X = scaler.transform(train_X)
     test_X_porte = scaler.transform(test_X_porte)
     test_X_signe = scaler.transform(test_X_signe)
@@ -101,7 +123,7 @@ def main():
     clf = LinearSVC()
     clf.fit(train_X, train_y)
     print("Training termine")
-    pickle.dump(clf, open("model_svm_2.sav", 'wb'))
+    pickle.dump(clf, open("model_svm_3.sav", 'wb'))
     print("Enregistrement termine")
 
     # Resultat sur les images de test
