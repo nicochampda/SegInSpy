@@ -112,7 +112,7 @@ def main():
     # Scaling
     scaler = StandardScaler()
     scaler.fit(train_X)
-    pickle.dump(scaler, open("scaler_svm_3.sav", 'wb'))
+    pickle.dump(scaler, open("scaler_svm_t2.sav", 'wb'))
     train_X = scaler.transform(train_X)
     test_X_porte = scaler.transform(test_X_porte)
     test_X_signe = scaler.transform(test_X_signe)
@@ -123,7 +123,7 @@ def main():
     clf = LinearSVC()
     clf.fit(train_X, train_y)
     print("Training termine")
-    pickle.dump(clf, open("model_svm_3.sav", 'wb'))
+    pickle.dump(clf, open("model_svm_t2.sav", 'wb'))
     print("Enregistrement termine")
 
     # Resultat sur les images de test
