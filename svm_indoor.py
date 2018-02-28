@@ -4,19 +4,21 @@ import cv2
 import pickle
 import numpy as np
 from random import sample
+from sklearn.svm import LinearSVC
 from preprocessing import preprocessing
 from sklearn.preprocessing import StandardScaler
-from sklearn.svm import LinearSVC
 
 
 def main():
-    """docstring for main"""
+    """Tire un certain nombre d'images aleatoirement, effectue
+    le pretraitement, effectue l'apprentissage du SVC et teste
+    la classification sur un set de test
+    """
 
     print("Apprentissage 2")
     print("Seuils: 40 - 100")
     print("Ouverture: 30 x 30")
 
-    decalage = 130
     train_size = 100
     test_size  = 30
 

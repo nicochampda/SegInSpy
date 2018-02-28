@@ -2,6 +2,12 @@ import cv2
 import numpy as np
 
 def preprocessing(img):
+    """Fonction effectuant le pretraitement d'une image
+    :param img: une image en niveaux de gris
+    :type img: ndarray (2D)
+    :return: l'image pretraitee
+    :rtype: ndarray (2D)
+    """
     #resize
     small_img = cv2.resize(img, (500,500))
 
