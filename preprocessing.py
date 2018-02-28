@@ -12,15 +12,15 @@ def preprocessing(img):
     equ = clahe.apply(small_img)
     
     #flou gaussien
-    blr = cv2.blur(equ, (10, 10))
+    blr = cv2.medianBlur(equ, 9)
     
     #seuillage
-    ret, thr4 = cv2.threshold(blr, 40, 255, cv2.THRESH_TOZERO)
-    ret, thr5 = cv2.threshold(thr4, 100, 255, cv2.THRESH_BINARY_INV)
-
+    ret, thr4 = cv2.threshold(blr, 20, 255, cv2.THRESH_TOZERO)
+    ret, thr5 = cv2.threshold(thr4, 80, 255, cv2.THRESH_BINARY_INV)
+    
+   
     #ouverture (erosion --> dilatation)
-    kernel = np.ones((30,30), np.uint8) #carré
+    kernel = np.ones((10,10), np.uint8) #carré
     opn = cv2.morphologyEx(thr5, cv2.MORPH_OPEN, kernel)
     
     return opn
-    

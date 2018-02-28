@@ -12,30 +12,37 @@ from sklearn.svm import LinearSVC
 def main():
     """docstring for main"""
 
-    print("Apprentissage 2")
-    print("Seuils: 40 - 100")
-    print("Ouverture: 30 x 30")
+    print("Apprentissage 5")
+    #print("Seuils: 18 - 80")
+    #print("Ouverture: 40 x 40")
 
     decalage = 130
     train_size = 100
     test_size  = 30
 
     # Porte, signe, escaliers
-    PATHS = ["/homes/mvu/Bureau/Sanssauvegarde/Doors/",
-            "/homes/mvu/Bureau/Sanssauvegarde/Sign/",
-            "/homes/mvu/Bureau/Sanssauvegarde/Stairs/"]
+    #PATHS = ["/homes/mvu/Bureau/Sanssauvegarde/Doors/",
+    #        "/homes/mvu/Bureau/Sanssauvegarde/Sign/",
+    #        "/homes/mvu/Bureau/Sanssauvegarde/Stairs/"]
+    PATHS = ["/homes/nchampda/Bureau/Sanssauvegarde/Doors/",
+            "/homes/nchampda/Bureau/Sanssauvegarde/Sign/",
+            "/homes/nchampda/Bureau/Sanssauvegarde/Stairs/"]
     list_dir = [os.listdir(PATHS[0]), os.listdir(PATHS[1]), os.listdir(PATHS[2])]
+    list_dir[0].remove("Thumbs.db")
+    list_dir[1].remove("Thumbs.db")
+    list_dir[2].remove("Thumbs.db")
+
 
     # Tirage au sort des images
     train_rand_index = [None, None, None]
     test_rand_index  = [None, None, None]
-    rand_index = np.random.permutation(np.arange(755)) # Porte
+    rand_index = np.random.permutation(np.arange(754)) # Porte
     train_rand_index[0] = rand_index[:train_size]
     test_rand_index[0]  = rand_index[train_size:train_size + test_size]
-    rand_index = np.random.permutation(np.arange(703)) # Signe
+    rand_index = np.random.permutation(np.arange(702)) # Signe
     train_rand_index[1] = rand_index[:train_size]
     test_rand_index[1]  = rand_index[train_size:train_size + test_size]
-    rand_index = np.random.permutation(np.arange(600)) # Stairs
+    rand_index = np.random.permutation(np.arange(599)) # Stairs
     train_rand_index[2] = rand_index[:train_size]
     test_rand_index[2]  = rand_index[train_size:train_size + test_size]
 
@@ -59,6 +66,7 @@ def main():
             # Enregistrement de la classe dans le set d'entrainement
             # 0 : porte, 1 : signe, 2 : escaliers
             train_y.append(j)
+            #del img
 
 
     test_X_porte = []
@@ -92,6 +100,7 @@ def main():
                 test_X_signe.append(pp_img.flatten())
             elif j == 2:
                 test_X_stair.append(pp_img.flatten())
+            #del img
 
     train_X = np.array(train_X)
     train_y = np.array(train_y)
@@ -112,7 +121,7 @@ def main():
     # Scaling
     scaler = StandardScaler()
     scaler.fit(train_X)
-    pickle.dump(scaler, open("scaler_svm_3.sav", 'wb'))
+    #pickle.dump(scaler, open("scaler_svm_t5.sav", 'wb'))
     train_X = scaler.transform(train_X)
     test_X_porte = scaler.transform(test_X_porte)
     test_X_signe = scaler.transform(test_X_signe)
@@ -123,7 +132,7 @@ def main():
     clf = LinearSVC()
     clf.fit(train_X, train_y)
     print("Training termine")
-    pickle.dump(clf, open("model_svm_3.sav", 'wb'))
+    #pickle.dump(clf, open("model_svm_t5.sav", 'wb'))
     print("Enregistrement termine")
 
     # Resultat sur les images de test
