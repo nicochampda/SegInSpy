@@ -3,10 +3,8 @@ import numpy as np
 
 def preprocessing(img):
     #resize
-    #small_img = cv2.resize(img, (0,0), fx=0.2, fy=0.2)
     small_img = cv2.resize(img, (500,500))
 
-    
     #egalisation d'histogrammes
     clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
     equ = clahe.apply(small_img)
@@ -24,3 +22,24 @@ def preprocessing(img):
     
     return opn
     
+def main():
+    """Fonction de test de la fonction de preprocessing"""
+
+    # Ouverture de l'image
+    img = cv2.imread("DOR_S1_38.jpg", cv2.IMREAD_GRAYSCALE)
+
+    # Pretraitement
+    pp_img = preprocessing(img)
+
+    plt.subplot(121)
+    plt.imshow(img, cmap = 'gray')
+    plt.subplot(122)
+    plt.imshow(pp_img, cmap = 'gray')
+    plt.show()
+
+if __name__ == '__main__':
+    import matplotlib.pyplot as plt
+    main()
+
+    
+
