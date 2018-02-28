@@ -23,28 +23,29 @@ def main():
     test_size  = 30
 
     # Porte, signe, escaliers
-    #PATHS = ["/homes/mvu/Bureau/Sanssauvegarde/Doors/",
-    #        "/homes/mvu/Bureau/Sanssauvegarde/Sign/",
-    #        "/homes/mvu/Bureau/Sanssauvegarde/Stairs/"]
-    PATHS = ["/homes/nchampda/Bureau/Sanssauvegarde/Doors/",
-            "/homes/nchampda/Bureau/Sanssauvegarde/Sign/",
-            "/homes/nchampda/Bureau/Sanssauvegarde/Stairs/"]
+    # PATH a mettre a jour selon l'emplacement des images
+    PATHS = ["~/Bureau/Sanssauvegarde/Doors/",
+             "~/Bureau/Sanssauvegarde/Sign/",
+             "~/Bureau/Sanssauvegarde/Stairs/"]
     list_dir = [os.listdir(PATHS[0]), os.listdir(PATHS[1]), os.listdir(PATHS[2])]
-    list_dir[0].remove("Thumbs.db")
-    list_dir[1].remove("Thumbs.db")
-    list_dir[2].remove("Thumbs.db")
+    try:
+        list_dir[0].remove("Thumbs.db")
+        list_dir[1].remove("Thumbs.db")
+        list_dir[2].remove("Thumbs.db")
+    except ValueError:
+        pass
 
 
     # Tirage au sort des images
     train_rand_index = [None, None, None]
     test_rand_index  = [None, None, None]
-    rand_index = np.random.permutation(np.arange(754)) # Porte
+    rand_index = np.random.permutation(np.arange(len(list_dir[0])) # Porte
     train_rand_index[0] = rand_index[:train_size]
     test_rand_index[0]  = rand_index[train_size:train_size + test_size]
-    rand_index = np.random.permutation(np.arange(702)) # Signe
+    rand_index = np.random.permutation(np.arange(len(list_dir[1]))) # Signe
     train_rand_index[1] = rand_index[:train_size]
     test_rand_index[1]  = rand_index[train_size:train_size + test_size]
-    rand_index = np.random.permutation(np.arange(599)) # Stairs
+    rand_index = np.random.permutation(np.arange(len(list_dir[2]))) # Stairs
     train_rand_index[2] = rand_index[:train_size]
     test_rand_index[2]  = rand_index[train_size:train_size + test_size]
 
@@ -52,7 +53,6 @@ def main():
     train_y = []
     # Ouverture des images d'entrainement
     for i in range(train_size):
-        #print("Entrainement:", i)
         for j in range(len(list_dir)): # Pour chaque classe
 
             index_image = train_rand_index[j][i]
@@ -68,7 +68,6 @@ def main():
             # Enregistrement de la classe dans le set d'entrainement
             # 0 : porte, 1 : signe, 2 : escaliers
             train_y.append(j)
-            #del img
 
 
     test_X_porte = []
@@ -79,7 +78,6 @@ def main():
     test_y_stair = np.ones(test_size) * 2
     # Ouverture des images de test
     for i in range(test_size):
-        #print("Test:", i)
         for j in range(len(list_dir)): # Pour chaque classe
 
             index_image = test_rand_index[j][i]
@@ -90,19 +88,19 @@ def main():
             # Preprocessing de l'image
             pp_img = preprocessing(img)
 
-            # Enregistrement de l'image dans le set de test
+            # Enregistrement de l'image dans un set de test unique
             #test_X.append(pp_img.flatten())
             # Enregistrement de la classe dans le set de test
             # 0 : porte, 1 : signe, 2 : escaliers
             #test_y.append(j)
 
+            # Enregistrement dans un set de test pour chaque classe
             if j == 0:
                 test_X_porte.append(pp_img.flatten())
             elif j == 1:
                 test_X_signe.append(pp_img.flatten())
             elif j == 2:
                 test_X_stair.append(pp_img.flatten())
-            #del img
 
     train_X = np.array(train_X)
     train_y = np.array(train_y)
@@ -115,25 +113,26 @@ def main():
     test_y_stair = np.array(test_y_stair)
 
     print("Ouverture des images terminee")
-    print("Test X porte:", test_X_porte.shape)
-    print("Test X signe:", test_X_signe.shape)
-    print("Test X stair:", test_X_stair.shape)
+    print("Train X :", train_X.shape)
+    print(" Test X :", test_X_porte.shape)
 
-    # Entrainement
-    # Scaling
+    # Normalisation
     scaler = StandardScaler()
     scaler.fit(train_X)
-    #pickle.dump(scaler, open("scaler_svm_t5.sav", 'wb'))
     train_X = scaler.transform(train_X)
     test_X_porte = scaler.transform(test_X_porte)
     test_X_signe = scaler.transform(test_X_signe)
     test_X_stair = scaler.transform(test_X_stair)
+    # Sauvegarde des parametres de normalisation
+    #pickle.dump(scaler, open("scaler_svm_t5.sav", 'wb'))
     print("Scaling termine")
     gc.collect()
 
+    # Entrainement
     clf = LinearSVC()
     clf.fit(train_X, train_y)
     print("Training termine")
+    # Sauvegarde du modele svc
     #pickle.dump(clf, open("model_svm_t5.sav", 'wb'))
     print("Enregistrement termine")
 
