@@ -10,7 +10,7 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 
 def main():
-    """docstring for main"""
+    """Fonction de demonstration"""
 
     test_size  = 3
 
@@ -24,6 +24,7 @@ def main():
     test_X_pp  = []
     test_X_raw = []
 
+    # Images selectionees
     images_name = ["SGN_S2_23.jpg", "STR_S3_16.JPG", "DOR_S2_60.jpg", "SGN_S1_78.jpg", "STR_S4_159.jpg", "DOR_S3_94.JPG",
                     "DOR_S1_75.jpg", "STR_S4_194.jpg", "SGN_S1_210.jpg",
                     "SGN_S2_107.jpg"]
