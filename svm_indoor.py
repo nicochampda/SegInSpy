@@ -15,18 +15,18 @@ def main():
     la classification sur un set de test
     """
 
-    print("Apprentissage 5")
-    #print("Seuils: 18 - 80")
-    #print("Ouverture: 40 x 40")
+    print("Apprentissage pp")
+    print("Seuils: 20 - 80")
+    print("Ouverture: 10 x 10")
 
     train_size = 100
     test_size  = 30
 
     # Porte, signe, escaliers
     # PATH a mettre a jour selon l'emplacement des images
-    PATHS = ["~/Bureau/Sanssauvegarde/Doors/",
-             "~/Bureau/Sanssauvegarde/Sign/",
-             "~/Bureau/Sanssauvegarde/Stairs/"]
+    PATHS = ["/homes/mvu/Bureau/Sanssauvegarde/Doors/",
+             "/homes/mvu/Bureau/Sanssauvegarde/Sign/",
+             "/homes/mvu/Bureau/Sanssauvegarde/Stairs/"]
     list_dir = [os.listdir(PATHS[0]), os.listdir(PATHS[1]), os.listdir(PATHS[2])]
     try:
         list_dir[0].remove("Thumbs.db")
@@ -39,7 +39,7 @@ def main():
     # Tirage au sort des images
     train_rand_index = [None, None, None]
     test_rand_index  = [None, None, None]
-    rand_index = np.random.permutation(np.arange(len(list_dir[0])) # Porte
+    rand_index = np.random.permutation(np.arange(len(list_dir[0]))) # Porte
     train_rand_index[0] = rand_index[:train_size]
     test_rand_index[0]  = rand_index[train_size:train_size + test_size]
     rand_index = np.random.permutation(np.arange(len(list_dir[1]))) # Signe
@@ -124,7 +124,7 @@ def main():
     test_X_signe = scaler.transform(test_X_signe)
     test_X_stair = scaler.transform(test_X_stair)
     # Sauvegarde des parametres de normalisation
-    #pickle.dump(scaler, open("scaler_svm_t5.sav", 'wb'))
+    pickle.dump(scaler, open("models/scaler_pp.sav", 'wb'))
     print("Scaling termine")
     gc.collect()
 
@@ -133,7 +133,7 @@ def main():
     clf.fit(train_X, train_y)
     print("Training termine")
     # Sauvegarde du modele svc
-    #pickle.dump(clf, open("model_svm_t5.sav", 'wb'))
+    pickle.dump(clf, open("models/svm_pp.sav", 'wb'))
     print("Enregistrement termine")
 
     # Resultat sur les images de test
